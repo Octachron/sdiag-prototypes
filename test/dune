@@ -1,1 +1,1 @@
-(tests (names json sexp sexp_output) (libraries reader yojson sexplib))
+(tests (names json sexp sexp_output) (libraries reader ppx_yojson_conv_lib yojson sexplib))

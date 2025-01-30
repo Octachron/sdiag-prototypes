@@ -1,4 +1,5 @@
 open Sexplib.Std
+open Ppx_yojson_conv_lib.Yojson_conv.Primitives
 
 type box_type = | B | HoV | HV | V | H [@@since 1.0] [@@version 1.0][@@deriving yojson, sexp]
 
@@ -34,12 +35,14 @@ type structured_text =
 [@@since 1.0] [@@version 1.0][@@deriving yojson, sexp]
 
 
-type validity = | Invalid | Deprecated | Full [@@since 1.0] [@@version 1.0][@@deriving yojson, sexp]
+type validity =
+  | Invalid | Deprecated | Full
+[@@since 1.0] [@@version 1.0][@@deriving yojson, sexp]
 
 
 type metadata = {
-  deprecated_paths: string array array option [@sexp.option];
-  invalid_paths: string array array option [@sexp.option];
+  deprecated_paths: string array array option [@sexp.option][@yojson.option];
+  invalid_paths: string array array option [@sexp.option][@yojson.option];
   valid: validity;
   downward_compatible: bool;
   version: int * int;
@@ -122,52 +125,52 @@ type error_kind =
 [@@since 1.0] [@@version 1.0][@@deriving yojson, sexp]
 
 type loc = {
-  characters: (int * int) option [@sexp.option];
-  stop_line: int option [@sexp.option];
-  start_line: int option [@sexp.option];
-  file: string option [@sexp.option];
+  characters: (int * int) option [@sexp.option][@yojson.option];
+  stop_line: int option [@sexp.option][@yojson.option];
+  start_line: int option [@sexp.option][@yojson.option];
+  file: string option [@sexp.option][@yojson.option];
 } [@@since 1.0]
 [@@version 1.0][@@deriving yojson, sexp]
 
 
-type error_msg = { loc: loc option [@sexp.option]; msg: structured_text array; } [@@since 1.0]
+type error_msg = { loc: loc option [@sexp.option][@yojson.option]; msg: structured_text array; } [@@since 1.0]
 [@@version 1.0][@@deriving yojson, sexp]
 type error_report = {
-  footnote: structured_text array option [@sexp.option];
-  sub: error_msg array option [@sexp.option];
+  footnote: structured_text array option [@sexp.option][@yojson.option];
+  sub: error_msg array option [@sexp.option][@yojson.option];
   main: error_msg;
   kind: error_kind;
 } [@@since 1.0]
 [@@version 1.0][@@deriving yojson, sexp]
 
 type profile = {
-  children: profile array option [@sexp.option];
-  columns: float array option [@sexp.option];
+  children: profile array option [@sexp.option][@yojson.option];
+  columns: float array option [@sexp.option][@yojson.option];
   name: string;
 } [@@since 1.0]
 [@@version 1.0][@@deriving yojson, sexp]
 
 type debug = {
-  profile: (string array * profile array) option [@sexp.option];
-  cmm_invariant: string option [@sexp.option];
-  linear: string array option [@sexp.option];
-  mach: string array option [@sexp.option];
-  unbox_specialised_args: string array option [@sexp.option];
-  unbox_closures: string array option [@sexp.option];
-  unbox_free_vars_of_closures: string array option [@sexp.option];
-  remove_free_vars_equal_to_args: string array option [@sexp.option];
-  cmm: string array option [@sexp.option];
-  raw_clambda: string array option [@sexp.option];
-  clambda: string array option [@sexp.option];
-  rawflambda: string array option [@sexp.option];
-  flambda: string array option [@sexp.option];
-  rawlambda: string option [@sexp.option];
-  lambda: string option [@sexp.option];
-  instr: string option [@sexp.option];
-  shape: string option [@sexp.option];
-  typedtree: string option [@sexp.option];
-  source: string option [@sexp.option];
-  parsetree: string option [@sexp.option];
+  profile: (string array * profile array) option [@sexp.option][@yojson.option];
+  cmm_invariant: string option [@sexp.option][@yojson.option];
+  linear: string array option [@sexp.option][@yojson.option];
+  mach: string array option [@sexp.option][@yojson.option];
+  unbox_specialised_args: string array option [@sexp.option][@yojson.option];
+  unbox_closures: string array option [@sexp.option][@yojson.option];
+  unbox_free_vars_of_closures: string array option [@sexp.option][@yojson.option];
+  remove_free_vars_equal_to_args: string array option [@sexp.option][@yojson.option];
+  cmm: string array option [@sexp.option][@yojson.option];
+  raw_clambda: string array option [@sexp.option][@yojson.option];
+  clambda: string array option [@sexp.option][@yojson.option];
+  rawflambda: string array option [@sexp.option][@yojson.option];
+  flambda: string array option [@sexp.option][@yojson.option];
+  rawlambda: string option [@sexp.option][@yojson.option];
+  lambda: string option [@sexp.option][@yojson.option];
+  instr: string option [@sexp.option][@yojson.option];
+  shape: string option [@sexp.option][@yojson.option];
+  typedtree: string option [@sexp.option][@yojson.option];
+  source: string option [@sexp.option][@yojson.option];
+  parsetree: string option [@sexp.option][@yojson.option];
 } [@@since 1.0]
 [@@version 1.0][@@deriving yojson, sexp]
 
@@ -175,28 +178,28 @@ type debug = {
 type compiler = {
   metadata: metadata
     (**This field describes the scheme version used to generate the diagnostic instance, and if this instance is valid according to this scheme.*);
-  alerts: error_report array option [@sexp.option];
-  warnings: error_report array option [@sexp.option];
-  error: error_report option [@sexp.option];
-  debug: debug option [@sexp.option];
+  alerts: error_report array option [@sexp.option][@yojson.option];
+  warnings: error_report array option [@sexp.option][@yojson.option];
+  error: error_report option [@sexp.option][@yojson.option];
+  debug: debug option [@sexp.option][@yojson.option];
 } [@@since 1.0]
 [@@version 1.0][@@deriving yojson, sexp]
 
 type compiler_wm = {
-  alerts: error_report array option [@sexp.option];
-  warnings: error_report array option [@sexp.option];
-  error: error_report option [@sexp.option];
-  debug: debug option [@sexp.option];
+  alerts: error_report array option [@sexp.option][@yojson.option];
+  warnings: error_report array option [@sexp.option][@yojson.option];
+  error: error_report option [@sexp.option][@yojson.option];
+  debug: debug option [@sexp.option][@yojson.option];
 } [@@since 1.0][@@deriving yojson, sexp]
 
 
 type toplevel = {
   metadata: metadata
     (**This field describes the scheme version used to generate the diagnostic instance, and if this instance is valid according to this scheme.*);
-  trace: structured_text array array option [@sexp.option];
-  errors: structured_text array array option [@sexp.option];
-  compiler: compiler_wm option [@sexp.option];
-  backtrace: structured_text array option [@sexp.option];
-  output: structured_text array option [@sexp.option];
+  trace: structured_text array array option [@sexp.option][@yojson.option];
+  errors: structured_text array array option [@sexp.option][@yojson.option];
+  compiler: compiler_wm option [@sexp.option][@yojson.option];
+  backtrace: structured_text array option [@sexp.option][@yojson.option];
+  output: structured_text array option [@sexp.option][@yojson.option];
 } [@@since 1.0]
 [@@version 1.0][@@deriving yojson, sexp]
