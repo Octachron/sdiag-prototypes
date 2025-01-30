@@ -1,0 +1,4 @@
+(executable
+ (name grace_bridge)
+ (libraries fmt reader grace grace.ansi_renderer grace.source_reader)
+)
