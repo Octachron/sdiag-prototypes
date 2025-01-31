@@ -58,8 +58,7 @@ let rec pp_doc ppf = function
      pp_open_box ppf box_type indent;
      pp_children ppf children;
      Format.pp_close_box ppf ()
-  | With_size (size,Text s) -> Format.pp_print_as ppf size s
-  | With_size (_,x) -> pp_doc ppf x
+  | With_size (size, s) -> Format.pp_print_as ppf size s
   | Deprecated text | Text text -> Format.pp_print_string ppf text
   | If_newline -> Format.pp_print_if_newline ppf ()
   | Newline -> Format.pp_force_newline ppf ()

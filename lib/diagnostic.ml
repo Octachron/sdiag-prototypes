@@ -22,7 +22,7 @@ type structured_text =
   | Tbox of structured_text array
   | Tag of format_tag * structured_text array
   | Box of box_type * int * structured_text array
-  | With_size of int * structured_text
+  | With_size of int * string
   | Deprecated of string
   | If_newline
   | Newline
