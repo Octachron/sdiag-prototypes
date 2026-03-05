@@ -117,7 +117,6 @@ let () =
   | None -> ()
   | Some e ->
     let d = Grace_source_reader.with_reader (fun () -> reprint e) in
-    Format.printf
-      "%a@."
-      Grace_ansi_renderer.(pp_diagnostic ())
-      d
+    let ppf = Format.std_formatter in
+    Grace_ansi_renderer.pp_diagnostic ppf d;
+    Format.pp_print_newline ppf ()
