@@ -85,30 +85,34 @@ let reprint (e:Reader.Diagnostic.error_report) =
       | Report_warning _ | Report_alert _ -> Gd.Severity.Warning
     in
     let main_range = Option.bind e.main.loc loc_range in
-    let labels, rem = Array.fold_left (fun (wl,wnl) (msg:Rd.error_msg) ->
-        match Option.bind msg.loc loc_range with
-        | None -> (wl, msg.msg :: wnl)
+    let labels, notes = Array.fold_left (fun (ls,ns) (msg:Rd.error_msg) ->
+        match Option.bind msg.loc loc_range  with
+        | None -> ls, Gd.Message.createf "%a" pp_children msg.msg :: ns
         | Some range ->
-          Gd.Label.secondaryf ~range "%a" pp_children msg.msg :: wl,
-          wnl) ([],[])
+          Gd.Label.secondaryf ~range "%a" pp_children msg.msg :: ls, ns
+      )
+      ([],[])
         (match e.sub with None -> [| |] | Some sub -> sub)
     in
+    let labels, notes = List.rev labels, List.rev notes in
     match main_range with
     | None ->
       Gd.createf
         ~labels
+        ~notes
         ~code:Any
         level
-        "%a%a" pp e.main.msg (Fmt.list pp) rem
+        "%a" pp e.main.msg
     | Some main_range ->
       let primary =
         Gd.Label.primaryf ~range:main_range "%a" pp e.main.msg
       in
       Gd.createf
         ~labels:(primary::labels)
+        ~notes
         ~code:Any
         level
-        "%a" (Fmt.list pp) rem
+        ""
 
 let () =
   let input = Yojson.Safe.from_channel stdin in
